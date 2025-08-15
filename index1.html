@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohith B. - AI, Robotics & SDE Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Deep Ocean" - A dark blue-to-purple gradient background with electric teal, gold, and vibrant purple highlights. -->
+    <!-- Application Structure Plan: A single-page application with a dashboard-like feel. The main content area is now divided into a "Skills Dashboard", a dedicated "Projects" section, and a separate "Internship Experience" section. This new structure provides a clearer distinction between personal projects and formal work experience, allowing the user to navigate and understand the portfolio's content more logically. All projects and internships are now presented in their own grid, and the dynamic filter has been removed to prioritize the new, distinct sections. -->
+    <!-- Visualization & Content Choices:
+        - Hero Section: Goal: Engage. Method: Typewriter effect on key roles with a vibrant gradient background. Interaction: Text animates on load. Justification: Creates an immediate, memorable, and dynamic impression.
+        - Skills Dashboard: Goal: Inform/Compare. Method: Radar Chart (Chart.js) with dynamic data. Justification: A radar chart is an excellent way to visualize multiple skill proficiencies at once, giving a comprehensive view of expertise across different domains (e.g., ML vs. SDE).
+        - Projects & Experience: Goal: Organize. Method: Two separate, dedicated card grids. Justification: Provides a clear visual and logical separation between personal work and professional experience, which is a standard best practice for resumes and portfolios.
+        - Overall: No SVG, no Mermaid. All visuals are achieved through Tailwind CSS, HTML, and Chart.js, ensuring a modern, fast, and interactive user experience. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0d1117;
+            color: #e2e8f0;
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #1f2937, #111827);
+        }
+        .bg-card {
+            background-color: #161b22;
+        }
+        .text-neon-teal {
+            color: #2dd4bf;
+        }
+        .text-neon-purple {
+            color: #a855f7;
+        }
+        .tag-sde { background-color: #2dd4bf; color: #0f172a; }
+        .tag-ml { background-color: #a855f7; color: #0f172a; }
+        .tag-robotics { background-color: #f59e0b; color: #0f172a; }
+        .tag-cv { background-color: #f59e0b; color: #0f172a; }
+        .tag-nlp { background-color: #a855f7; color: #0f172a; }
+        .typewriter h1 {
+            overflow: hidden;
+            border-right: 0.15em solid #fff;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 0.1em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+            max-width: fit-content;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: white; }
+        }
+        .project-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .project-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            max-height: 50vh;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-[#161b22]/80 backdrop-blur-lg sticky top-0 z-50 shadow-lg">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-3xl font-bold text-neon-teal tracking-wider">Mohith B.</a>
+            <div class="hidden md:flex space-x-8 text-lg">
+                <a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a>
+                <a href="#dashboard" class="text-gray-400 hover:text-white transition-colors">Dashboard</a>
+                <a href="#projects" class="text-gray-400 hover:text-white transition-colors">Projects</a>
+                <a href="#internships" class="text-gray-400 hover:text-white transition-colors">Internships</a>
+                <a href="#ngo" class="text-gray-400 hover:text-white transition-colors">Volunteering</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-400 focus:outline-none">
+                    <span class="text-2xl">&#9776;</span>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4 space-y-2 text-center text-lg bg-[#161b22]">
+            <a href="#about" class="block text-gray-400 hover:text-white">About</a>
+            <a href="#dashboard" class="block text-gray-400 hover:text-white">Dashboard</a>
+            <a href="#projects" class="block text-gray-400 hover:text-white">Projects</a>
+            <a href="#internships" class="block text-gray-400 hover:text-white">Internships</a>
+            <a href="#ngo" class="block text-gray-400 hover:text-white">Volunteering</a>
+        </div>
+    </header>
+
+    <main class="min-h-screen">
+        <!-- Hero Section -->
+        <section id="hero" class="hero-bg min-h-screen flex items-center justify-center p-6">
+            <div class="text-center">
+                <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold text-white tracking-wide leading-tight drop-shadow-lg">Mohith B.</h1>
+                <div class="mt-4 text-xl sm:text-2xl md:text-3xl text-neon-teal font-light drop-shadow-md typewriter">
+                    <h2 id="role-text" class="font-mono"></h2>
+                </div>
+                <div class="mt-10 flex flex-wrap justify-center items-center space-x-4 md:space-x-8 text-xl text-white">
+                    <a href="mailto:et.mohith@gmail.com" class="p-3 bg-white/10 rounded-full hover:bg-white/30 transition-colors" aria-label="Email">
+                        &#9993;
+                    </a>
+                    <a href="tel:+918951874291" class="p-3 bg-white/10 rounded-full hover:bg-white/30 transition-colors" aria-label="Phone">
+                        &#9742;
+                    </a>
+                    <a href="https://www.linkedin.com/in/your-profile" target="_blank" class="p-3 bg-white/10 rounded-full hover:bg-white/30 transition-colors" aria-label="LinkedIn">
+                        &#128279;
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 px-6">
+            <div class="container mx-auto max-w-4xl">
+                <h2 class="text-4xl font-bold text-center mb-12 text-neon-purple">About Me</h2>
+                <p class="text-lg text-gray-400 leading-relaxed text-center">
+                    I am a highly motivated and results-driven Electronics and Communication Engineering student with a strong passion for AI, Machine Learning, and Natural Language Processing. My experience ranges from developing and fine-tuning deep learning models for edge devices to designing robust software systems and exploring the exciting field of robotics. I am actively seeking roles where I can apply my skills in **Machine Learning, Deep Learning, SDE, and Robotics**.
+                </p>
+            </div>
+        </section>
+
+        <!-- Interactive Dashboard Section -->
+        <section id="dashboard" class="py-20 px-6 bg-gray-900">
+            <div class="container mx-auto max-w-7xl">
+                <h2 class="text-4xl font-bold text-center mb-16 text-neon-teal">Skills & Education</h2>
+                
+                <!-- Skills Dashboard -->
+                <div class="grid md:grid-cols-2 gap-12 mb-20">
+                    <div class="bg-card rounded-xl p-8 shadow-xl">
+                        <h3 class="text-3xl font-bold mb-6 text-white text-center">Skill Proficiency</h3>
+                        <div class="chart-container">
+                            <canvas id="skillsRadarChart"></canvas>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-4 text-center">This radar chart visually represents my proficiency across core technical domains.</p>
+                    </div>
+                    <div class="bg-card rounded-xl p-8 shadow-xl">
+                        <h3 class="text-3xl font-bold mb-6 text-white text-center">Education & Certifications</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-lg font-semibold text-gray-300">Amrita Vishwa Vidyapeetham</p>
+                                <p class="text-gray-500">Bachelor of Technology, ECE</p>
+                                <p class="text-sm text-gray-600">2022 - 2026</p>
+                            </div>
+                            <div>
+                                <p class="text-lg font-semibold text-gray-300">K.V. DRDO</p>
+                                <p class="text-gray-500">High School Diploma</p>
+                                <p class="text-sm text-gray-600">2010 - 2022</p>
+                            </div>
+                        </div>
+                        <h4 class="text-xl font-bold mt-8 mb-4 text-white">Certifications</h4>
+                        <ul class="space-y-3 text-gray-400 font-mono list-disc list-inside">
+                            <li>Supervised Machine Learning: Regression and Classification - Stanford University</li>
+                            <li>Introduction to Large Language Models - Coursera</li>
+                            <li>Data Science by IBM - Coursera</li>
+                            <li>Generative AI - Coursera</li>
+                            <li>AI Fundamentals - Coursera</li>
+                            <li>Graph Theory and Machine Learning - IISC</li>
+                            <li>Machine Learning Pipelines with Azure ML Studio - Coursera</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 px-6">
+            <div class="container mx-auto max-w-7xl">
+                <h2 class="text-4xl font-bold text-center mb-16 text-neon-purple">Personal Projects</h2>
+                <div id="projects-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                </div>
+            </div>
+        </section>
+
+        <!-- Internships Section -->
+        <section id="internships" class="py-20 px-6 bg-gray-900">
+            <div class="container mx-auto max-w-7xl">
+                <h2 class="text-4xl font-bold text-center mb-16 text-neon-teal">Internship Experience</h2>
+                <div id="internships-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                </div>
+            </div>
+        </section>
+
+
+        <!-- NGO Volunteering Section -->
+        <section id="ngo" class="py-20 px-6">
+            <div class="container mx-auto max-w-4xl text-center">
+                <h2 class="text-4xl font-bold mb-8 text-neon-purple">Volunteering</h2>
+                <div class="bg-card rounded-xl p-8 shadow-xl">
+                    <p class="text-lg text-gray-400 leading-relaxed">
+                        I am passionate about contributing to society through meaningful work. I have actively volunteered with various NGOs to support community development and educational initiatives, applying my problem-solving skills in a non-technical context and reinforcing my commitment to making a positive impact.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-500 text-center py-6 border-t border-gray-700">
+        <p>&copy; 2025 Mohith B. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('#mobile-menu a');
+            menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+            mobileLinks.forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); }); });
+
+            // Typewriter effect for roles
+            const roles = ["Machine Learning Engineer", "Deep Learning Enthusiast", "Robotics Developer", "Software Engineer"];
+            let roleIndex = 0;
+            let charIndex = 0;
+            const roleText = document.getElementById('role-text');
+
+            function type() {
+                if (roleIndex < roles.length) {
+                    if (charIndex < roles[roleIndex].length) {
+                        roleText.textContent += roles[roleIndex].charAt(charIndex);
+                        charIndex++;
+                        setTimeout(type, 100);
+                    } else {
+                        setTimeout(erase, 1500);
+                    }
+                }
+            }
+
+            function erase() {
+                if (charIndex > 0) {
+                    roleText.textContent = roles[roleIndex].substring(0, charIndex - 1);
+                    charIndex--;
+                    setTimeout(erase, 50);
+                } else {
+                    roleIndex = (roleIndex + 1) % roles.length;
+                    setTimeout(type, 500);
+                }
+            }
+            setTimeout(type, 1000);
+
+            // Skills Radar Chart
+            const skillsData = {
+                labels: ['ML/DL', 'SDE', 'Robotics', 'NLP', 'Tools', 'Networking'],
+                datasets: [{
+                    label: 'Proficiency',
+                    data: [90, 85, 88, 92, 90, 80],
+                    backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                    borderColor: 'rgba(168, 85, 247, 1)',
+                    pointBackgroundColor: 'rgba(168, 85, 247, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(168, 85, 247, 1)'
+                }]
+            };
+
+            const ctx = document.getElementById('skillsRadarChart').getContext('2d');
+            const skillsRadarChart = new Chart(ctx, {
+                type: 'radar',
+                data: skillsData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.2)' },
+                            pointLabels: { color: '#e2e8f0', font: { size: 14 } },
+                            ticks: { display: false, beginAtZero: true, max: 100, stepSize: 20 }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.label}: ${context.raw}%`
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Projects Data
+            const projectsData = [
+                {
+                    title: 'Distributed Log Monitoring', tags: ['SDE', 'ML'],
+                    description: 'A real-time distributed logging pipeline using Apache Kafka for high-throughput log ingestion and Elasticsearch for querying, with a lightweight ML anomaly detection module.',
+                    details: ['Designed & implemented a real-time distributed logging pipeline using Apache Kafka.', 'Integrated Elasticsearch to store, index, and query logs efficiently.', 'Developed a lightweight anomaly detection module to automatically flag unusual log patterns using ML.', 'Configured alerting rules to trigger notifications for anomalies or critical errors.', 'Ensured scalability & fault tolerance by setting up Kafka partitions and Elasticsearch replication.']
+                },
+                {
+                    title: 'API Gateway with Intelligent Routing', tags: ['SDE', 'ML'],
+                    description: 'Developed a custom API Gateway with features like rate limiting, authentication, and a service registry, enhanced with an ML-based routing module.',
+                    details: ['Developed a custom API Gateway to manage incoming client requests efficiently.', 'Implemented core gateway features including rate limiting, authentication, load balancing, and a service registry for dynamic backend discovery.', 'Built an ML-based routing module to predict the fastest backend node based on historical latency and load patterns.', 'Ensured high availability by handling node failures and performing seamless failover.']
+                },
+                {
+                    title: 'AI-Powered Network Packet Analyzer', tags: ['ML', 'NLP', 'SDE'],
+                    description: 'A deep learning system using NLP techniques to analyze TCP/IP packet payloads in real-time for intrusion detection and traffic categorization.',
+                    details: ['Built a deep learning system that applies NLP techniques (BERT, Word2Vec) to analyze and classify TCP/IP packet payloads.', 'Converted raw network data into tokenized sequences using custom protocol-aware parsers.', 'Trained supervised ML classifiers (Random Forest, SVM) and Transformer-based models for detecting anomalies.', 'Integrated with Wireshark, Scapy, and pcap libraries; deployed with Flask + Docker for real-time network monitoring.']
+                },
+                {
+                    title: 'SpikeConv Hybrid Model', tags: ['ML', 'Robotics'],
+                    description: 'A hybrid deep learning architecture combining SNNs with CNNs for energy-efficient processing, with applications in robotics and edge computing.',
+                    details: ['Designed a hybrid deep learning architecture combining Spiking Neural Networks (SNNs) with conventional Convolutional Neural Networks (CNNs).', 'Trained & evaluated the model on multiple benchmark datasets, analyzing classification accuracy, inference time, and energy efficiency.', 'Integrated biologically inspired neuron models to simulate realistic spiking behaviors.', 'Optimized training through surrogate gradient techniques to handle non-differentiable spike functions.']
+                },
+                {
+                    title: 'Robotic Arm with DL Models', tags: ['Robotics', 'ML'],
+                    description: 'An AI-powered robotic arm control system integrating SpikeFormer for efficient feature extraction and YOLOv10 for high-speed object detection.',
+                    details: ['Developed an Al-powered robotic arm control system integrating SpikeFormer for efficient spatio-temporal feature extraction.', 'Implemented YOLOv10 for high-speed and accurate object detection to guide robotic arm movements in real-time.', 'Evaluated and integrated five top-performing deep learning models for object classification and pose estimation.', 'Optimized inference for edge deployment by quantizing models and using GPU acceleration.']
+                },
+                {
+                    title: 'Code Search Engine using CodeBERT', tags: ['SDE', 'ML', 'NLP'],
+                    description: 'Leveraged CodeBERT, a Transformer-based model fine-tuned on source code and natural language pairs, to enable semantic NLP-driven code search.',
+                    details: ['Leveraged CodeBERT, a Transformer-based model, to enable semantic NLP-driven code search.', 'Designed a dual-encoder Transformer architecture to map user queries and code snippets into a shared embedding space for high-precision retrieval.']
+                },
+                {
+                    title: 'Detection of Mars Surface', tags: ['ML', 'CV'],
+                    description: 'Fine-tuned advanced CNN architectures (VGG-16, ResNet-50) for high-resolution planetary image analysis and terrain classification on NASA datasets.',
+                    details: ['Developed and fine-tuned advanced CNN architectures (VGG-16, ResNet-50, Inception V3) for high-resolution planetary image analysis and terrain classification.', 'Leveraged Google Colab TPUs, NVIDIA CUDA/cuDNN, and distributed training techniques for large-scale model optimization and scalability.', 'Applied AI-driven computer vision on NASA HIRISE datasets, demonstrating real-world applications of deep learning in remote sensing and scientific discovery.']
+                }
+            ];
+
+            // Internships Data
+            const internshipsData = [
+                {
+                    title: 'Research Intern', company: 'Indian Institute of Technology Guwahati', dates: 'May 2025 - Ongoing', tags: ['ML', 'NLP'],
+                    description: 'Developed and fine-tuned Transformer models for context-aware NLP applications and researched energy-efficient Transformer-SNN hybrid models.',
+                    details: ['Developed and fine-tuned Transformer models (BERT, GPT) for context-aware intent detection and document classification.', 'Researched and implemented Transformer-SNN hybrid models (SpikeFormer) to enable energy-efficient inference.', 'Deployed optimized Transformer models on edge devices using ONNX/TFLite, enabling real-time Edge AI NLP solutions.', 'Benchmarked performance trade-offs (latency, accuracy, energy) across Transformer and SNN architectures.']
+                },
+                {
+                    title: 'Research Intern', company: 'Samsung', dates: 'March 2024 - January 2025', tags: ['ML', 'SDE'],
+                    description: 'Implemented and evaluated channel estimation algorithms for 5G, applying Machine Learning for link adaptation and throughput optimization.',
+                    details: ['Implemented and evaluated channel estimation algorithms using USRP with 5G NR OAI-compliant PHY, focusing on real-time adaptability.', 'Applied Machine Learning (TensorFlow, scikit-learn) for link adaptation, interference detection, and throughput optimization in wireless systems.', 'Developed and tested 5G signal processing modules, integrating TCP/IP stack behaviors for accurate end-to-end simulation.', 'Designed AI-powered anomaly detection models to identify signal interference patterns and optimize network reliability.']
+                },
+                {
+                    title: 'Project Intern', company: 'Tata Institute of Fundamental Research', dates: 'December 2024 - January 2025', tags: ['ML'],
+                    description: 'Used AI models to analyze bioelectrical signals from plants for environmental and physiological studies.',
+                    details: ['Worked with organic electrochemical transistors (OECTs) and flexible biosensors to monitor electrical signaling in plants.', 'Utilized AI models for pattern recognition and anomaly detection in bioelectrical signals to study plant stress responses and stimulus-triggered behaviors.']
+                },
+                {
+                    title: 'Intern', company: 'Defence Research and Development Organisation (DRDO)', dates: 'May 2024 - July 2025', tags: ['ML', 'CV'],
+                    description: 'Developed deep learning pipelines using CNNs and YOLOv10 for real-time aircraft detection in ISAR radar images.',
+                    details: ['Developed deep learning pipelines using CNNs and YOLOv10 for real-time aircraft detection in ISAR radar images.', 'Applied computer vision and NLP fusion techniques to classify radar scenes based on contextual metadata and visual patterns.', 'Optimized model deployment using PyTorch, ONNX, and OpenVINO for cross-platform scalability and edge inference.']
+                }
+            ];
+
+            function renderCards(data, containerId) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                data.forEach(item => {
+                    const tagHtml = item.tags.map(tag => {
+                        const tagClass = tag.toLowerCase().replace(/\s+/g, '-');
+                        return `<span class="text-xs font-semibold px-2 py-1 rounded-full ${tagClass === 'sde' ? 'bg-teal-500/20 text-teal-300' : tagClass === 'ml' ? 'bg-purple-500/20 text-purple-300' : tagClass === 'robotics' ? 'bg-amber-500/20 text-amber-300' : tagClass === 'cv' ? 'bg-amber-500/20 text-amber-300' : tagClass === 'nlp' ? 'bg-purple-500/20 text-purple-300' : 'bg-gray-500/20 text-gray-300'}">${tag}</span>`;
+                    }).join('');
+
+                    const card = document.createElement('div');
+                    card.className = `project-card bg-card rounded-xl p-6 shadow-xl relative`;
+                    card.innerHTML = `
+                        <div class="mb-4">
+                            <h3 class="text-2xl font-bold text-white">${item.title}</h3>
+                            ${item.company ? `<p class="text-gray-400 font-semibold mb-2">${item.company}</p>` : ''}
+                            ${item.dates ? `<p class="text-sm text-gray-500 mb-4">${item.dates}</p>` : ''}
+                        </div>
+                        <p class="text-gray-400 mb-4">${item.description}</p>
+                        <ul class="list-disc list-inside text-gray-400 text-sm space-y-1 font-mono">
+                            ${item.details.map(detail => `<li>${detail}</li>`).join('')}
+                        </ul>
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            ${tagHtml}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            renderCards(projectsData, 'projects-container');
+            renderCards(internshipsData, 'internships-container');
+
+        });
+    </script>
+</body>
+</html>
